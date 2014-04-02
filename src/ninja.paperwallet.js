@@ -106,9 +106,9 @@ ninja.wallets.paperwallet = {
 			});
 		}
 		else {
-			var key = new Bitcoin.ECKey(false);
-			var bitcoinAddress = key.getBitcoinAddress();
-			var privateKeyWif = key.getBitcoinWalletImportFormat();
+			var key = new StartCOIN.ECKey(false);
+			var bitcoinAddress = key.getStartCOINAddress();
+			var privateKeyWif = key.getStartCOINWalletImportFormat();
 			if (ninja.wallets.paperwallet.useArtisticWallet) {
 				ninja.wallets.paperwallet.showArtisticWallet(idPostFix, bitcoinAddress, privateKeyWif);
 			}
