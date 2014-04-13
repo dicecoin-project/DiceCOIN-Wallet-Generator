@@ -4,6 +4,7 @@
 	<!--
 	This is a fork of bitaddress.org for StartCOIN.
 	GitHub Repository: https://github.com/StartCOIN-project/bitaddress.org
+	
 	Here's the bitaddress.org info:
 
 	Donation Address: 1NiNja1bUmhSoTXozBRBEtR8LeF9TGbZBN
@@ -23,11 +24,11 @@
 	Array.prototype.map		Public Domain
 	window.Crypto			BSD License
 	window.SecureRandom		BSD License
-	window.EllipticCurve		BSD License
+	window.EllipticCurve	BSD License
 	window.BigInteger		BSD License
 	window.QRCode			MIT License
 	window.Bitcoin			MIT License
-	window.Crypto_scrypt		MIT License
+	window.Crypto_scrypt	MIT License
 
 	The bitaddress.org software is available under The MIT License (MIT)
 	Copyright (c) 2011-2013 bitaddress.org (pointbiz)
@@ -50,7 +51,7 @@
 	GitHub Repository: https://github.com/pointbiz/bitaddress.org
 	-->
 
-	<title>liteaddress.org</title>
+	<title>StartCOIN address generator</title>
 	<meta charset="utf-8">
 
 	<script type="text/javascript">
@@ -5240,8 +5241,8 @@ Bitcoin.ECKey = (function () {
 	ECKey.isWalletImportFormat = function (key) {
 		key = key.toString();
 		return (ECKey.privateKeyPrefix == 0xfd) ?
-							(/^6[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{50}$/.test(key)) :
-							(/^9[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{50}$/.test(key));
+							(/^9[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{50}$/.test(key)) :
+							(/^6[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{50}$/.test(key));
 	};
 
 	// 52 characters base58
@@ -6156,6 +6157,10 @@ body { font-family: Arial; }
 				</div>
 			</div>
 			<div class="authorpgp">
+				<span class="item">
+					<a href="pgpsignedmsg.txt" target="_blank"><span id="footerlabelversion">Version History</span> (v2.6.0)</a>
+					(<a href="ninja_bitaddress.org.txt" target="_blank" id="footerlabelpgp">PGP</a>)
+				</span>
 				<span class="item"><a href="https://github.com/startcoin-project/bitaddress.org" target="_blank" id="footerlabelgithub">GitHub Repository</a></span>
 			</div>
 			<div class="copyright">
@@ -7930,9 +7935,9 @@ ninja.wallets.detailwallet = {
 				return true;
 			},
 			testGetBitcoinAddressFromByteArray: function () {
-				var bytes = [4, 120, 152, 47, 64, 250, 12, 11, 122, 85, 113, 117, 131, 175, 201, 154, 78, 223, 211, 1, 162, 114, 157, 197, 155, 11, 142, 185, 225, 134, 146, 188, 181, 33, 240, 84, 250, 217, 130, 175, 76, 193, 147, 58, 253, 31, 27, 86, 62, 167, 121, 166, 170, 108, 206, 54, 163, 11, 148, 125, 214, 83, 230, 62, 68];
+				var bytes = [4, 56, 96, 142, 88, 131, 131, 230, 137, 210, 176, 59, 25, 190, 126, 48, 103, 87, 83, 34, 191, 122, 59, 6, 53, 239, 159, 166, 253, 112, 67, 225, 190, 172, 249, 130, 18, 2, 106, 95, 103, 17, 104, 54, 143, 109, 78, 179, 47, 19, 72, 65, 186, 133, 39, 27, 154, 197, 10, 82, 30, 71, 188, 60, 203];
 				var address = ninja.publicKey.getBitcoinAddressFromByteArray(bytes);
-				if (address != "1Cnz9ULjzBPYhDw1J8bpczDWCEXnC9HuU1") {
+				if (address != "sKBasvSaCo2NHmBo57mjhGAqzGc8hJDfkE") {
 					return false;
 				}
 				return true;
