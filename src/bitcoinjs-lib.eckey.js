@@ -1,6 +1,6 @@
 //https://raw.github.com/pointbiz/bitcoinjs-lib/9b2f94a028a7bc9bed94e0722563e9ff1d8e8db8/src/eckey.js
-StartCOIN.ECKey = (function () {
-	var ECDSA = StartCOIN.ECDSA;
+Bitcoin.ECKey = (function () {
+	var ECDSA = Bitcoin.ECDSA;
 	var ecparams = EllipticCurve.getSECCurveByName("secp256k1");
 	var rng = new SecureRandom();
 
@@ -12,7 +12,7 @@ StartCOIN.ECKey = (function () {
 		} else if (input instanceof BigInteger) {
 			// Input is a private key value
 			this.priv = input;
-		} else if (StartCOIN.Util.isArray(input)) {
+		} else if (Bitcoin.Util.isArray(input)) {
 			// Prepend zero byte to prevent interpretation as negative integer
 			this.priv = BigInteger.fromByteArrayUnsigned(input);
 		} else if ("string" == typeof input) {
@@ -29,10 +29,8 @@ StartCOIN.ECKey = (function () {
 			} else if (ECKey.isBase64Format(input)) {
 				bytes = Crypto.util.base64ToBytes(input);
 			}
-			
-			if (ECKey.isBase6Format(input)) {
-				this.priv = new BigInteger(input, 6);
-			} else if (bytes == null || bytes.length != 32) {
+
+			if (bytes == null || bytes.length != 32) {
 				this.priv = null;
 			} else {
 				// Prepend zero byte to prevent interpretation as negative integer
@@ -43,13 +41,12 @@ StartCOIN.ECKey = (function () {
 		this.compressed = (this.compressed == undefined) ? !!ECKey.compressByDefault : this.compressed;
 	};
 
-        // this is the same as Litecoin
-	ECKey.privateKeyPrefix = 0xb0; // mainnet 0xb0    testnet 0xEF
+	ECKey.privateKeyPrefix = 0xfd; // mainnet 0xfd
 
 	/**
 	* Whether public keys should be returned compressed by default.
 	*/
-	ECKey.compressByDefault = false;
+	ECKey.compressByDefault = true;
 
 	/**
 	* Set whether the public key should be returned compressed or not.
@@ -103,16 +100,16 @@ StartCOIN.ECKey = (function () {
 	ECKey.prototype.getPubKeyHash = function () {
 		if (this.compressed) {
 			if (this.pubKeyHashComp) return this.pubKeyHashComp;
-			return this.pubKeyHashComp = StartCOIN.Util.sha256ripe160(this.getPub());
+			return this.pubKeyHashComp = Bitcoin.Util.sha256ripe160(this.getPub());
 		} else {
 			if (this.pubKeyHashUncomp) return this.pubKeyHashUncomp;
-			return this.pubKeyHashUncomp = StartCOIN.Util.sha256ripe160(this.getPub());
+			return this.pubKeyHashUncomp = Bitcoin.Util.sha256ripe160(this.getPub());
 		}
 	};
 
-	ECKey.prototype.getStartCOINAddress = function () {
+	ECKey.prototype.getBitcoinAddress = function () {
 		var hash = this.getPubKeyHash();
-		var addr = new StartCOIN.Address(hash);
+		var addr = new Bitcoin.Address(hash);
 		return addr.toString();
 	};
 
@@ -121,7 +118,7 @@ StartCOIN.ECKey = (function () {
 	*/
 	ECKey.prototype.setPub = function (pub) {
 		// byte array
-		if (StartCOIN.Util.isArray(pub)) {
+		if (Bitcoin.Util.isArray(pub)) {
 			pub = Crypto.util.bytesToHex(pub).toString().toUpperCase();
 		}
 		var ecPoint = ecparams.getCurve().decodePointHex(pub);
@@ -131,27 +128,27 @@ StartCOIN.ECKey = (function () {
 	};
 
 	// Sipa Private Key Wallet Import Format 
-	ECKey.prototype.getStartCOINWalletImportFormat = function () {
-		var bytes = this.getStartCOINPrivateKeyByteArray();
+	ECKey.prototype.getBitcoinWalletImportFormat = function () {
+		var bytes = this.getBitcoinPrivateKeyByteArray();
 		bytes.unshift(ECKey.privateKeyPrefix); // prepend 0x80 byte
 		if (this.compressed) bytes.push(0x01); // append 0x01 byte for compressed format
 		var checksum = Crypto.SHA256(Crypto.SHA256(bytes, { asBytes: true }), { asBytes: true });
 		bytes = bytes.concat(checksum.slice(0, 4));
-		var privWif = StartCOIN.Base58.encode(bytes);
+		var privWif = Bitcoin.Base58.encode(bytes);
 		return privWif;
 	};
 
 	// Private Key Hex Format 
-	ECKey.prototype.getStartCOINHexFormat = function () {
-		return Crypto.util.bytesToHex(this.getStartCOINPrivateKeyByteArray()).toString().toUpperCase();
+	ECKey.prototype.getBitcoinHexFormat = function () {
+		return Crypto.util.bytesToHex(this.getBitcoinPrivateKeyByteArray()).toString().toUpperCase();
 	};
 
 	// Private Key Base64 Format 
-	ECKey.prototype.getStartCOINBase64Format = function () {
-		return Crypto.util.bytesToBase64(this.getStartCOINPrivateKeyByteArray());
+	ECKey.prototype.getBitcoinBase64Format = function () {
+		return Crypto.util.bytesToBase64(this.getBitcoinPrivateKeyByteArray());
 	};
 
-	ECKey.prototype.getStartCOINPrivateKeyByteArray = function () {
+	ECKey.prototype.getBitcoinPrivateKeyByteArray = function () {
 		// Get a copy of private key as a byte array
 		var bytes = this.priv.toByteArrayUnsigned();
 		// zero pad if private key is less than 32 bytes 
@@ -162,14 +159,14 @@ StartCOIN.ECKey = (function () {
 	ECKey.prototype.toString = function (format) {
 		format = format || "";
 		if (format.toString().toLowerCase() == "base64" || format.toString().toLowerCase() == "b64") {
-			return this.getStartCOINBase64Format();
+			return this.getBitcoinBase64Format();
 		}
 		// Wallet Import Format
 		else if (format.toString().toLowerCase() == "wif") {
-			return this.getStartCOINWalletImportFormat();
+			return this.getBitcoinWalletImportFormat();
 		}
 		else {
-			return this.getStartCOINHexFormat();
+			return this.getBitcoinHexFormat();
 		}
 	};
 
@@ -185,7 +182,7 @@ StartCOIN.ECKey = (function () {
 	* Parse a wallet import format private key contained in a string.
 	*/
 	ECKey.decodeWalletImportFormat = function (privStr) {
-		var bytes = StartCOIN.Base58.decode(privStr);
+		var bytes = Bitcoin.Base58.decode(privStr);
 		var hash = bytes.slice(0, 33);
 		var checksum = Crypto.SHA256(Crypto.SHA256(hash, { asBytes: true }), { asBytes: true });
 		if (checksum[0] != bytes[33] ||
@@ -205,7 +202,7 @@ StartCOIN.ECKey = (function () {
 	* Parse a compressed wallet import format private key contained in a string.
 	*/
 	ECKey.decodeCompressedWalletImportFormat = function (privStr) {
-		var bytes = StartCOIN.Base58.decode(privStr);
+		var bytes = Bitcoin.Base58.decode(privStr);
 		var hash = bytes.slice(0, 34);
 		var checksum = Crypto.SHA256(Crypto.SHA256(hash, { asBytes: true }), { asBytes: true });
 		if (checksum[0] != bytes[34] ||
@@ -231,7 +228,7 @@ StartCOIN.ECKey = (function () {
 	// 51 characters base58, always starts with a '6'
 	ECKey.isWalletImportFormat = function (key) {
 		key = key.toString();
-		return (ECKey.privateKeyPrefix == 0xb0) ?
+		return (ECKey.privateKeyPrefix == 0xfd) ?
 							(/^6[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{50}$/.test(key)) :
 							(/^9[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{50}$/.test(key));
 	};
@@ -239,8 +236,8 @@ StartCOIN.ECKey = (function () {
 	// 52 characters base58
 	ECKey.isCompressedWalletImportFormat = function (key) {
 		key = key.toString();
-		return (ECKey.privateKeyPrefix == 0xb0) ?
-							(/^[LK][123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{51}$/.test(key)) :
+		return (ECKey.privateKeyPrefix == 0xfd) ?
+							(/^e[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{51}$/.test(key)) :
 							(/^c[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{51}$/.test(key));
 	};
 
@@ -248,12 +245,6 @@ StartCOIN.ECKey = (function () {
 	ECKey.isBase64Format = function (key) {
 		key = key.toString();
 		return (/^[ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789=+\/]{44}$/.test(key));
-	};
-
-	// 99 characters, 1=1, if using dice convert 6 to 0
-	ECKey.isBase6Format = function (key) {
-		key = key.toString();
-		return (/^[012345]{99}$/.test(key));
 	};
 
 	// 22, 26 or 30 characters, always starts with an 'S'

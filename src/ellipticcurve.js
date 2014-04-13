@@ -183,18 +183,14 @@
 		if (this.zinv == null) {
 			this.zinv = this.z.modInverse(this.curve.q);
 		}
-		var r = this.x.toBigInteger().multiply(this.zinv);
-		this.curve.reduce(r);
-		return this.curve.fromBigInteger(r);
+		return this.curve.fromBigInteger(this.x.toBigInteger().multiply(this.zinv).mod(this.curve.q));
 	};
 
 	ec.PointFp.prototype.getY = function () {
 		if (this.zinv == null) {
 			this.zinv = this.z.modInverse(this.curve.q);
 		}
-		var r = this.y.toBigInteger().multiply(this.zinv);
-		this.curve.reduce(r);
-		return this.curve.fromBigInteger(r);
+		return this.curve.fromBigInteger(this.y.toBigInteger().multiply(this.zinv).mod(this.curve.q));
 	};
 
 	ec.PointFp.prototype.equals = function (other) {
@@ -276,7 +272,6 @@
 			w = w.add(this.z.square().multiply(a));
 		}
 		w = w.mod(this.curve.q);
-		//this.curve.reduce(w);
 		// x3 = 2 * y1 * z1 * (w^2 - 8 * x1 * y1^2 * z1)
 		var x3 = w.square().subtract(x1.shiftLeft(3).multiply(y1sqz1)).shiftLeft(1).multiply(y1z1).mod(this.curve.q);
 		// y3 = 4 * y1^2 * z1 * (3 * w * x1 - 2 * y1^2 * z1) - w^3
@@ -345,12 +340,12 @@
 		return R;
 	};
 
-	// patched by bitaddress.org and Casascius for use with StartCOIN.ECKey
+	// patched by bitaddress.org and Casascius for use with Bitcoin.ECKey
 	// patched by coretechs to support compressed public keys
 	ec.PointFp.prototype.getEncoded = function (compressed) {
 		var x = this.getX().toBigInteger();
 		var y = this.getY().toBigInteger();
-		var len = 32; // integerToBytes will zero pad if integer is less than 32 bytes. 32 bytes length is required by the StartCOIN protocol.
+		var len = 32; // integerToBytes will zero pad if integer is less than 32 bytes. 32 bytes length is required by the Bitcoin protocol.
 		var enc = ec.integerToBytes(x, len);
 
 		// when compressed prepend byte depending if y point is even or odd 
@@ -517,7 +512,6 @@
 		this.a = this.fromBigInteger(a);
 		this.b = this.fromBigInteger(b);
 		this.infinity = new ec.PointFp(this, null, null);
-		this.reducer = new Barrett(this.q);
 	}
 
 	ec.CurveFp.prototype.getQ = function () {
@@ -543,10 +537,6 @@
 
 	ec.CurveFp.prototype.fromBigInteger = function (x) {
 		return new ec.FieldElementFp(this.q, x);
-	};
-
-	ec.CurveFp.prototype.reduce = function (x) {
-		this.reducer.reduce(x);
 	};
 
 	// for now, work with hex strings because they're easier in JS
@@ -576,21 +566,6 @@
 			default: // unsupported
 				return null;
 		}
-	};
-
-	ec.CurveFp.prototype.encodePointHex = function (p) {
-		if (p.isInfinity()) return "00";
-		var xHex = p.getX().toBigInteger().toString(16);
-		var yHex = p.getY().toBigInteger().toString(16);
-		var oLen = this.getQ().toString(16).length;
-		if ((oLen % 2) != 0) oLen++;
-		while (xHex.length < oLen) {
-			xHex = "0" + xHex;
-		}
-		while (yHex.length < oLen) {
-			yHex = "0" + yHex;
-		}
-		return "04" + xHex + yHex;
 	};
 
 	/*
@@ -643,9 +618,9 @@
 	ec.X9Parameters.prototype.getN = function () { return this.n; };
 	ec.X9Parameters.prototype.getH = function () { return this.h; };
 
-	// secp256k1 is the Curve used by StartCOIN
+	// secp256k1 is the Curve used by Bitcoin
 	ec.secNamedCurves = {
-		// used by StartCOIN
+		// used by Bitcoin
 		"secp256k1": function () {
 			// p = 2^256 - 2^32 - 2^9 - 2^8 - 2^7 - 2^6 - 2^4 - 1
 			var p = ec.fromHex("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F");
@@ -661,7 +636,7 @@
 		}
 	};
 
-	// secp256k1 called by StartCOIN's ECKEY
+	// secp256k1 called by Bitcoin's ECKEY
 	ec.getSECCurveByName = function (name) {
 		if (ec.secNamedCurves[name] == undefined) return null;
 		return ec.secNamedCurves[name]();

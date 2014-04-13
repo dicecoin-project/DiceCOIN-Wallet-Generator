@@ -1,6 +1,6 @@
 //https://raw.github.com/bitcoinjs/bitcoinjs-lib/09e8c6e184d6501a0c2c59d73ca64db5c0d3eb95/src/util.js
-// StartCOIN utility functions
-StartCOIN.Util = {
+// Bitcoin utility functions
+Bitcoin.Util = {
 	/**
 	* Cross-browser compatibility version of Array.isArray.
 	*/
@@ -21,7 +21,7 @@ StartCOIN.Util = {
 	/**
 	* Turn an integer into a "var_int".
 	*
-	* "var_int" is a variable length integer used by StartCOIN's binary format.
+	* "var_int" is a variable length integer used by Bitcoin's binary format.
 	*
 	* Returns a byte array.
 	*/
@@ -41,7 +41,7 @@ StartCOIN.Util = {
 		}
 	},
 	/**
-	* Parse a StartCOIN value byte array, returning a BigInteger.
+	* Parse a Bitcoin value byte array, returning a BigInteger.
 	*/
 	valueToBigInt: function (valueBuffer) {
 		if (valueBuffer instanceof BigInteger) return valueBuffer;
@@ -50,9 +50,9 @@ StartCOIN.Util = {
 		return BigInteger.fromByteArrayUnsigned(valueBuffer);
 	},
 	/**
-	* Format a StartCOIN value as a string.
+	* Format a Bitcoin value as a string.
 	*
-	* Takes a BigInteger or byte-array and returns that amount of StartCOINs in a
+	* Takes a BigInteger or byte-array and returns that amount of Bitcoins in a
 	* nice standard formatting.
 	*
 	* Examples:
@@ -71,7 +71,7 @@ StartCOIN.Util = {
 		return integerPart + "." + decimalPart;
 	},
 	/**
-	* Parse a floating point string as a StartCOIN value.
+	* Parse a floating point string as a Bitcoin value.
 	*
 	* Keep in mind that parsing user input is messy. You should always display
 	* the parsed value back to the user to make sure we understood his input

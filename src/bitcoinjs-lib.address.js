@@ -1,20 +1,20 @@
 //https://raw.github.com/bitcoinjs/bitcoinjs-lib/09e8c6e184d6501a0c2c59d73ca64db5c0d3eb95/src/address.js
-StartCOIN.Address = function (bytes) {
+Bitcoin.Address = function (bytes) {
 	if ("string" == typeof bytes) {
-		bytes = StartCOIN.Address.decodeString(bytes);
+		bytes = Bitcoin.Address.decodeString(bytes);
 	}
 	this.hash = bytes;
-	this.version = StartCOIN.Address.networkVersion;
+	this.version = Bitcoin.Address.networkVersion;
 };
 
-StartCOIN.Address.networkVersion = 0x00; // mainnet
+Bitcoin.Address.networkVersion = 0x7D; // mainnet
 
 /**
-* Serialize this object as a standard StartCOIN address.
+* Serialize this object as a standard Bitcoin address.
 *
 * Returns the address as a base58-encoded string in the standardized format.
 */
-StartCOIN.Address.prototype.toString = function () {
+Bitcoin.Address.prototype.toString = function () {
 	// Get a copy of the hash
 	var hash = this.hash.slice(0);
 
@@ -22,18 +22,18 @@ StartCOIN.Address.prototype.toString = function () {
 	hash.unshift(this.version);
 	var checksum = Crypto.SHA256(Crypto.SHA256(hash, { asBytes: true }), { asBytes: true });
 	var bytes = hash.concat(checksum.slice(0, 4));
-	return StartCOIN.Base58.encode(bytes);
+	return Bitcoin.Base58.encode(bytes);
 };
 
-StartCOIN.Address.prototype.getHashBase64 = function () {
+Bitcoin.Address.prototype.getHashBase64 = function () {
 	return Crypto.util.bytesToBase64(this.hash);
 };
 
 /**
-* Parse a StartCOIN address contained in a string.
+* Parse a Bitcoin address contained in a string.
 */
-StartCOIN.Address.decodeString = function (string) {
-	var bytes = StartCOIN.Base58.decode(string);
+Bitcoin.Address.decodeString = function (string) {
+	var bytes = Bitcoin.Base58.decode(string);
 	var hash = bytes.slice(0, 21);
 	var checksum = Crypto.SHA256(Crypto.SHA256(hash, { asBytes: true }), { asBytes: true });
 

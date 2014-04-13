@@ -13,7 +13,7 @@ ninja.wallets.bulkwallet = {
 	},
 
 	// use this function to bulk generate addresses
-	// rowLimit: number of StartCOIN Addresses to generate
+	// rowLimit: number of Bitcoin Addresses to generate
 	// startIndex: add this number to the row index for output purposes
 	// returns:
 	// index,bitcoinAddress,privateKeyWif
@@ -37,13 +37,13 @@ ninja.wallets.bulkwallet = {
 		var bulkWallet = ninja.wallets.bulkwallet;
 		if (bulkWallet.csvRowsRemaining > 0) {
 			bulkWallet.csvRowsRemaining--;
-			var key = new StartCOIN.ECKey(false);
+			var key = new Bitcoin.ECKey(false);
 			key.setCompressed(bulkWallet.compressedAddrs);
 
 			bulkWallet.csv.push((bulkWallet.csvRowLimit - bulkWallet.csvRowsRemaining + bulkWallet.csvStartIndex)
-								+ ",\"" + key.getStartCOINAddress() + "\",\"" + key.toString("wif")
+								+ ",\"" + key.getBitcoinAddress() + "\",\"" + key.toString("wif")
 			//+	"\",\"" + key.toString("wifcomp")    // uncomment these lines to add different private key formats to the CSV
-			//+ "\",\"" + key.getStartCOINHexFormat() 
+			//+ "\",\"" + key.getBitcoinHexFormat() 
 			//+ "\",\"" + key.toString("base64") 
 								+ "\"");
 
