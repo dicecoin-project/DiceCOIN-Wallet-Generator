@@ -81,9 +81,9 @@
 				return true;
 			},
 			testGetBitcoinAddressFromByteArray: function () {
-				var bytes = [4, 120, 152, 47, 64, 250, 12, 11, 122, 85, 113, 117, 131, 175, 201, 154, 78, 223, 211, 1, 162, 114, 157, 197, 155, 11, 142, 185, 225, 134, 146, 188, 181, 33, 240, 84, 250, 217, 130, 175, 76, 193, 147, 58, 253, 31, 27, 86, 62, 167, 121, 166, 170, 108, 206, 54, 163, 11, 148, 125, 214, 83, 230, 62, 68];
+				var bytes = [4, 56, 96, 142, 88, 131, 131, 230, 137, 210, 176, 59, 25, 190, 126, 48, 103, 87, 83, 34, 191, 122, 59, 6, 53, 239, 159, 166, 253, 112, 67, 225, 190, 172, 249, 130, 18, 2, 106, 95, 103, 17, 104, 54, 143, 109, 78, 179, 47, 19, 72, 65, 186, 133, 39, 27, 154, 197, 10, 82, 30, 71, 188, 60, 203];
 				var address = ninja.publicKey.getBitcoinAddressFromByteArray(bytes);
-				if (address != "1Cnz9ULjzBPYhDw1J8bpczDWCEXnC9HuU1") {
+				if (address != "sKBasvSaCo2NHmBo57mjhGAqzGc8hJDfkE") {
 					return false;
 				}
 				return true;
@@ -228,8 +228,8 @@
 				return true;
 			},
 			testGetBitcoinPrivateKeyByteArray: function () {
-				var key = "5J8QhiQtAiozKwyk3GCycAscg1tNaYhNdiiLey8vaDK8Bzm4znb";
-				var bytes = [41, 38, 101, 195, 135, 36, 24, 173, 241, 218, 127, 250, 58, 100, 111, 47, 6, 2, 36, 109, 166, 9, 138, 145, 210, 41, 195, 33, 80, 242, 113, 139];
+				var key = "9UvpxpicpT5B97RcZoExxzrZ9y7jEBCHtxWvW6gMV4a6nxBaz75";
+				var bytes = [17, 0, 226, 26, 59, 60, 170, 131, 246, 1, 132, 115, 132, 240, 105, 144, 190, 225, 135, 121, 145, 127, 197, 11, 75, 150, 227, 205, 177, 46, 78, 162];
 				var btcKey = new Bitcoin.ECKey(key);
 				if (btcKey.getBitcoinPrivateKeyByteArray().toString() != bytes.toString()) {
 					return false;
@@ -237,8 +237,8 @@
 				return true;
 			},
 			testECKeyDecodeWalletImportFormat: function () {
-				var key = "5J8QhiQtAiozKwyk3GCycAscg1tNaYhNdiiLey8vaDK8Bzm4znb";
-				var bytes1 = [41, 38, 101, 195, 135, 36, 24, 173, 241, 218, 127, 250, 58, 100, 111, 47, 6, 2, 36, 109, 166, 9, 138, 145, 210, 41, 195, 33, 80, 242, 113, 139];
+				var key = "9UvpxpicpT5B97RcZoExxzrZ9y7jEBCHtxWvW6gMV4a6nxBaz75";
+				var bytes1 = [17, 0, 226, 26, 59, 60, 170, 131, 246, 1, 132, 115, 132, 240, 105, 144, 190, 225, 135, 121, 145, 127, 197, 11, 75, 150, 227, 205, 177, 46, 78, 162];
 				var bytes2 = Bitcoin.ECKey.decodeWalletImportFormat(key);
 				if (bytes1.toString() != bytes2.toString()) {
 					return false;
@@ -246,8 +246,8 @@
 				return true;
 			},
 			testECKeyDecodeCompressedWalletImportFormat: function () {
-				var key = "KxbhchnQquYQ2dfSxz7rrEaQTCukF4uCV57TkamyTbLzjFWcdi3S";
-				var bytes1 = [41, 38, 101, 195, 135, 36, 24, 173, 241, 218, 127, 250, 58, 100, 111, 47, 6, 2, 36, 109, 166, 9, 138, 145, 210, 41, 195, 33, 80, 242, 113, 139];
+				var key = "eYPzMYYysGXZXC5wDSMzufbBkDh8pSuPwcGJWDTzyc9fQhGLjkB3";
+				var bytes1 = [199, 214, 183, 13, 38, 171, 158, 207, 238, 29, 205, 97, 200, 15, 127, 26, 41, 215, 70, 93, 62, 231, 147, 51, 163, 229, 75, 113, 225, 51, 219, 55];
 				var bytes2 = Bitcoin.ECKey.decodeCompressedWalletImportFormat(key);
 				if (bytes1.toString() != bytes2.toString()) {
 					return false;
@@ -255,19 +255,19 @@
 				return true;
 			},
 			testWifToPubKeyHex: function () {
-				var key = "5J8QhiQtAiozKwyk3GCycAscg1tNaYhNdiiLey8vaDK8Bzm4znb";
+				var key = "eX4y7ZG18arep7bvVnf9zC26EvPfv7ikDgJMyHYqsKKCipE9xq9P";
 				var btcKey = new Bitcoin.ECKey(key);
-				if (btcKey.getPubKeyHex() != "0478982F40FA0C0B7A55717583AFC99A4EDFD301A2729DC59B0B8EB9E18692BCB521F054FAD982AF4CC1933AFD1F1B563EA779A6AA6CCE36A30B947DD653E63E44"
+				if (btcKey.getPubKeyHex() != "A0374C27934D43E736592EB85052FFED6D8E1C2829E4368044D101FD38714D4A"
 						|| btcKey.getPubPoint().compressed != false) {
 					return false;
 				}
 				return true;
 			},
 			testWifToPubKeyHexCompressed: function () {
-				var key = "5J8QhiQtAiozKwyk3GCycAscg1tNaYhNdiiLey8vaDK8Bzm4znb";
+				var key = "9UtyMpA7TTiC1Sx1utPo6ynMjuX8EXB4LzWMRGnNBmHKdbEirgZ";
 				var btcKey = new Bitcoin.ECKey(key);
 				btcKey.setCompressed(true);
-				if (btcKey.getPubKeyHex() != "0278982F40FA0C0B7A55717583AFC99A4EDFD301A2729DC59B0B8EB9E18692BCB5"
+				if (btcKey.getPubKeyHex() != "0313B79E569F39E433601A0B4B321A4937C2D5082B043E42D2A34399800D3AE7EC"
 						|| btcKey.getPubPoint().compressed != true) {
 					return false;
 				}
@@ -290,18 +290,18 @@
 				return true;
 			},
 			testCompressedWifToECKey: function () {
-				var key = "KxbhchnQquYQ2dfSxz7rrEaQTCukF4uCV57TkamyTbLzjFWcdi3S";
+				var key = "eYPzMYYysGXZXC5wDSMzufbBkDh8pSuPwcGJWDTzyc9fQhGLjkB3";
 				var btcKey = new Bitcoin.ECKey(key);
-				if (btcKey.getBitcoinWalletImportFormat() != "KxbhchnQquYQ2dfSxz7rrEaQTCukF4uCV57TkamyTbLzjFWcdi3S"
+				if (btcKey.getBitcoinWalletImportFormat() != "eYPzMYYysGXZXC5wDSMzufbBkDh8pSuPwcGJWDTzyc9fQhGLjkB3"
 						|| btcKey.getPubPoint().compressed != true) {
 					return false;
 				}
 				return true;
 			},
 			testWifToECKey: function () {
-				var key = "5J8QhiQtAiozKwyk3GCycAscg1tNaYhNdiiLey8vaDK8Bzm4znb";
+				var key = "eX4y7ZG18arep7bvVnf9zC26EvPfv7ikDgJMyHYqsKKCipE9xq9P";
 				var btcKey = new Bitcoin.ECKey(key);
-				if (btcKey.getBitcoinWalletImportFormat() != "5J8QhiQtAiozKwyk3GCycAscg1tNaYhNdiiLey8vaDK8Bzm4znb") {
+				if (btcKey.getBitcoinWalletImportFormat() != "eX4y7ZG18arep7bvVnf9zC26EvPfv7ikDgJMyHYqsKKCipE9xq9P") {
 					return false;
 				}
 				return true;
@@ -310,7 +310,7 @@
 				var key = "bitaddress.org unit test";
 				var bytes = Crypto.SHA256(key, { asBytes: true });
 				var btcKey = new Bitcoin.ECKey(bytes);
-				if (btcKey.getBitcoinWalletImportFormat() != "5J8QhiQtAiozKwyk3GCycAscg1tNaYhNdiiLey8vaDK8Bzm4znb") {
+				if (btcKey.getBitcoinWalletImportFormat() != "9V7TkhWsguMJBVcuMinsqFpR9Gs8qa2pzcZo9h7yq89bsm1q3nr") {
 					return false;
 				}
 				return true;
@@ -333,26 +333,26 @@
 				return true;
 			},
 			testGetECKeyFromAddingCompressed: function () {
-				var key1 = "KxbhchnQquYQ2dfSxz7rrEaQTCukF4uCV57TkamyTbLzjFWcdi3S";
-				var key2 = "L1n4cgNZAo2KwdUc15zzstvo1dcxpBw26NkrLqfDZtU9AEbPkLWu";
+				var key1 = "eVwhPusDZUuBXk1zRjZvjJr9HjWRgoGXTXrEqATqm23Vw3Q3rP6V";
+				var key2 = "eU4Fic7nsvVu8hjYUiqC5GajDf5vb8UVVhbZfverUSbW2vTr18xY";
 				var ecKey = ninja.privateKey.getECKeyFromAdding(key1, key2);
-				if (ecKey.getBitcoinWalletImportFormat() != "L3A43j2pc2J8F2SjBNbYprPrcDpDCh8Aju8dUH65BEM2r7RFSLv4") {
+				if (ecKey.getBitcoinWalletImportFormat() != "eYJRTgpR9WcJ8XQBzHYBPYVeYTmK5496mTqpwATk1PxvjDMnu9Ud") {
 					return false;
 				}
 				return true;
 			},
 			testGetECKeyFromAddingUncompressedAndCompressed: function () {
-				var key1 = "5J8QhiQtAiozKwyk3GCycAscg1tNaYhNdiiLey8vaDK8Bzm4znb";
-				var key2 = "L1n4cgNZAo2KwdUc15zzstvo1dcxpBw26NkrLqfDZtU9AEbPkLWu";
+				var key1 = "9UtyMpA7TTiC1Sx1utPo6ynMjuX8EXB4LzWMRGnNBmHKdbEirgZ";
+				var key2 = "eU4Fic7nsvVu8hjYUiqC5GajDf5vb8UVVhbZfverUSbW2vTr18xY";
 				var ecKey = ninja.privateKey.getECKeyFromAdding(key1, key2);
-				if (ecKey.getBitcoinWalletImportFormat() != "5KAJTSqSjpsZ11KyEE3qu5PrJVjR4ZCbNxK3Nb1F637oe41m1c2") {
+				if (ecKey.getBitcoinWalletImportFormat() != "eUV7pe6R5pbvBkv2ayos9dGho74rJw3y5Ap9E8f8ktNU2dEpSSNv") {
 					return false;
 				}
 				return true;
 			},
 			testGetECKeyFromAddingShouldReturnNullWhenSameKey1: function () {
-				var key1 = "5J8QhiQtAiozKwyk3GCycAscg1tNaYhNdiiLey8vaDK8Bzm4znb";
-				var key2 = "5J8QhiQtAiozKwyk3GCycAscg1tNaYhNdiiLey8vaDK8Bzm4znb";
+				var key1 = "9UtyMpA7TTiC1Sx1utPo6ynMjuX8EXB4LzWMRGnNBmHKdbEirgZ";
+				var key2 = "9UtyMpA7TTiC1Sx1utPo6ynMjuX8EXB4LzWMRGnNBmHKdbEirgZ";
 				var ecKey = ninja.privateKey.getECKeyFromAdding(key1, key2);
 				if (ecKey != null) {
 					return false;
@@ -360,8 +360,8 @@
 				return true;
 			},
 			testGetECKeyFromAddingShouldReturnNullWhenSameKey2: function () {
-				var key1 = "5J8QhiQtAiozKwyk3GCycAscg1tNaYhNdiiLey8vaDK8Bzm4znb";
-				var key2 = "KxbhchnQquYQ2dfSxz7rrEaQTCukF4uCV57TkamyTbLzjFWcdi3S";
+				var key1 = "9UtyMpA7TTiC1Sx1utPo6ynMjuX8EXB4LzWMRGnNBmHKdbEirgZ";
+				var key2 = "eS8Pks9DVntoayXq2RqcVPdCYNoxvgBPmEpZ88fEWWT3ETGKaHde";
 				var ecKey = ninja.privateKey.getECKeyFromAdding(key1, key2);
 				if (ecKey != null) {
 					return false;
@@ -378,26 +378,26 @@
 				return true;
 			},
 			testGetECKeyFromMultiplyingCompressed: function () {
-				var key1 = "KxbhchnQquYQ2dfSxz7rrEaQTCukF4uCV57TkamyTbLzjFWcdi3S";
-				var key2 = "L1n4cgNZAo2KwdUc15zzstvo1dcxpBw26NkrLqfDZtU9AEbPkLWu";
+				var key1 = "eVwhPusDZUuBXk1zRjZvjJr9HjWRgoGXTXrEqATqm23Vw3Q3rP6V";
+				var key2 = "eU4Fic7nsvVu8hjYUiqC5GajDf5vb8UVVhbZfverUSbW2vTr18xY";
 				var ecKey = ninja.privateKey.getECKeyFromMultiplying(key1, key2);
-				if (ecKey.getBitcoinWalletImportFormat() != "L5LFitc24jme2PfVChJS3bKuQAPBp54euuqLWciQdF2CxnaU3M8t") {
+				if (ecKey.getBitcoinWalletImportFormat() != "eVfg4Bhcsp5J4sZZsZKVJAb9jPuj6iXqyQQicNLWyLJWKtK66vYW") {
 					return false;
 				}
 				return true;
 			},
 			testGetECKeyFromMultiplyingUncompressedAndCompressed: function () {
-				var key1 = "5J8QhiQtAiozKwyk3GCycAscg1tNaYhNdiiLey8vaDK8Bzm4znb";
-				var key2 = "L1n4cgNZAo2KwdUc15zzstvo1dcxpBw26NkrLqfDZtU9AEbPkLWu";
+				var key1 = "9UtyMpA7TTiC1Sx1utPo6ynMjuX8EXB4LzWMRGnNBmHKdbEirgZ";
+				var key2 = "eU4Fic7nsvVu8hjYUiqC5GajDf5vb8UVVhbZfverUSbW2vTr18xY";
 				var ecKey = ninja.privateKey.getECKeyFromMultiplying(key1, key2);
-				if (ecKey.getBitcoinWalletImportFormat() != "5KetpZ5mCGagCeJnMmvo18n4iVrtPSqrpnW5RP92Gv2BQy7GPCk") {
+				if (ecKey.getBitcoinWalletImportFormat() != "eTVmdgW73ien7s6zgfXHrMDZaUoC1pFrjMjt6a832cGdKPaoBbzu") {
 					return false;
 				}
 				return true;
 			},
 			testGetECKeyFromMultiplyingShouldReturnNullWhenSameKey1: function () {
-				var key1 = "5J8QhiQtAiozKwyk3GCycAscg1tNaYhNdiiLey8vaDK8Bzm4znb";
-				var key2 = "5J8QhiQtAiozKwyk3GCycAscg1tNaYhNdiiLey8vaDK8Bzm4znb";
+				var key1 = "9VCxRd8xHvqtTUfWqQgVHcr4kqSRFERfTN1erkJTHgFsNTdF1P9";
+				var key2 = "9VCxRd8xHvqtTUfWqQgVHcr4kqSRFERfTN1erkJTHgFsNTdF1P9";
 				var ecKey = ninja.privateKey.getECKeyFromMultiplying(key1, key2);
 				if (ecKey != null) {
 					return false;
@@ -405,8 +405,8 @@
 				return true;
 			},
 			testGetECKeyFromMultiplyingShouldReturnNullWhenSameKey2: function () {
-				var key1 = "5J8QhiQtAiozKwyk3GCycAscg1tNaYhNdiiLey8vaDK8Bzm4znb";
-				var key2 = "KxbhchnQquYQ2dfSxz7rrEaQTCukF4uCV57TkamyTbLzjFWcdi3S";
+				var key1 = "9VCxRd8xHvqtTUfWqQgVHcr4kqSRFERfTN1erkJTHgFsNTdF1P9";
+				var key2 = "eTVmdgW73ien7s6zgfXHrMDZaUoC1pFrjMjt6a832cGdKPaoBbzu";
 				var ecKey = ninja.privateKey.getECKeyFromMultiplying(key1, key2);
 				if (ecKey != null) {
 					return false;
