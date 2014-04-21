@@ -8110,7 +8110,6 @@ ninja.wallets.detailwallet = {
 			},
 			testWifToPubKeyHex: function () {
 				var key = "9UtyMpA7TTiC1Sx1utPo6ynMjuX8EXB4LzWMRGnNBmHKdbEirgZ";
-				console.log('TEST');
 				var btcKey = new Bitcoin.ECKey(key);
 				if (btcKey.getPubKeyHex() != "0413B79E569F39E433601A0B4B321A4937C2D5082B043E42D2A34399800D3AE7EC7A4E380D453E29BDB7F308B3D5A5EE7583428BC51792EB5FCD7B1835EAB701C3"
 						|| btcKey.getPubPoint().compressed != false) {
@@ -8320,7 +8319,6 @@ ninja.wallets.detailwallet = {
 			testBugWithLeadingZeroBytePrivateKey: function () {
 				var key = "0004d30da67214fa65a41a6493576944c7ea86713b14db437446c7a8df8e13da";
 				var btcKey = new Bitcoin.ECKey(key);
-				console.log(btcKey.getBitcoinAddress());
 				if (btcKey.getBitcoinAddress() != "sKyCh49iZd3kLCzavsQJQtGjLQDR5NtEAu") {
 					return false;
 				}
