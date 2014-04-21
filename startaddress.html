@@ -5686,8 +5686,8 @@ Bitcoin.Util = {
 .keyarea .public { float: left; }
 .keyarea .pubaddress { display: inline-block; height: 40px; padding: 0 0 0 10px; float: left; }
 .keyarea .privwif { margin: 0;  float: right; text-align: right; padding: 0 20px 0 0; position: relative; }
-.keyarea .label { text-decoration: underline; }
-.keyarea .output { display: block; }
+.keyarea .label { text-decoration: underline; font-weight: bold; }
+.keyarea .output { display: block; font-family: monospace; }
 .keyarea .qrcode_public { display: inline-block; float: left; }
 .keyarea .qrcode_private { display: inline-block; position: relative; top: 28px; float: right; }
 .pubkeyhex { word-wrap: break-word; }
@@ -5699,8 +5699,8 @@ body { font-family: Arial; }
 #keyarea .pubaddress { float: none; display: block; padding: 0; height: auto; }
 #keyarea .label { text-decoration: none; }
 #keyarea .privwif { float: none; text-align: right; position: relative; padding: 0; }
-#keyarea .qrcode_public { float: none; display: block; }
-#keyarea .qrcode_private { float: none; display: block; top: 0; text-align: right; }
+#keyarea .qrcode_public { float: none; display: block; padding: 13px 11px 11px 11px; }
+#keyarea .qrcode_private { float: none; display: block; top: 0; text-align: right; padding: 13px 11px 11px 11px; }
 #keyarea .private { width: 30%; display: table-cell; }
 #keyarea .public { width: 30%; display: table-cell; }
 #singlearea { font-size: 90%; }
@@ -5713,6 +5713,7 @@ body { font-family: Arial; }
 #generate { font-family: Courier New; height: 158px; text-align: left; position: relative; padding: 5px; border: 2px solid #149dec; }
 #generate span { padding: 5px 5px 0 5px; }
 		
+#paperkeyarea { margin-top: 5px; }
 #paperarea { min-height: 120px; display: none; }
 #paperarea .keyarea { border: 2px solid #149dec; border-top: 0; }
 #paperarea .keyarea.art { display: block; height: auto; border: 0; font-family: Ubuntu, Arial; padding: 0; margin: 0; }
@@ -5901,8 +5902,7 @@ body { font-family: Arial; }
 				<div id="keyarea" class="keyarea">
 					<div class="public">
 						<div class="pubaddress">
-							<span class="label" id="singlelabelbitcoinaddress"><b>StartCOIN Address</b></span>
-						    <br />
+							<span class="label" id="singlelabelbitcoinaddress">StartCOIN Address</span>
 						</div>
 						<div id="qrcode_public" class="qrcode_public"></div>
 						<div class="pubaddress">
@@ -5912,8 +5912,7 @@ body { font-family: Arial; }
 					</div>
 					<div class="private">
 						<div class="privwif">
-							<span class="label" id="singlelabelprivatekey"><b>Private Key (Wallet Import Format)</b></span>
-							<br />
+							<span class="label" id="singlelabelprivatekey">Private Key (Wallet Import Format)</span>
 						</div>
 						<div id="qrcode_private" class="qrcode_private"></div>
 						<div class="privwif">
@@ -8330,6 +8329,7 @@ ninja.wallets.detailwallet = {
 			//https://en.bitcoin.it/wiki/BIP_0038
 			testBip38: function (done) {
 				var tests = [
+					//ENCRYPTED, PASSPHRASE, UNENCRYPTED WIF
 					//No compression, no EC multiply
 					["6PRVWUbkzzsbcVac2qwfssoUJAN1Xhrg6bNk8J7Nzm5H7kxEbn2Nh2ZoGg", "TestingOneTwoThree", "5KN7MzqK5wt2TP1fQCYyHBtDrXdJuXbUzm4A9rKAteGu3Qi5CVR"],
 					["6PRNFFkZc2NZ6dJqFfhRoFNMR9Lnyj7dYGrzdgXXVMXcxoKTePPX1dWByq", "Satoshi", "5HtasZ6ofTHP6HCwTqTkLDuLQisYPah7aUnSKfC7h4hMUVw2gi5"],
