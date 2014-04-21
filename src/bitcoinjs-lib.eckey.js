@@ -19,6 +19,7 @@ Bitcoin.ECKey = (function () {
 			var bytes = null;
 			if (ECKey.isWalletImportFormat(input)) {
 				bytes = ECKey.decodeWalletImportFormat(input);
+				this.compressed = false;
 			} else if (ECKey.isCompressedWalletImportFormat(input)) {
 				bytes = ECKey.decodeCompressedWalletImportFormat(input);
 				this.compressed = true;
@@ -130,7 +131,7 @@ Bitcoin.ECKey = (function () {
 	// Sipa Private Key Wallet Import Format 
 	ECKey.prototype.getBitcoinWalletImportFormat = function () {
 		var bytes = this.getBitcoinPrivateKeyByteArray();
-		bytes.unshift(ECKey.privateKeyPrefix); // prepend 0x80 byte
+		bytes.unshift(ECKey.privateKeyPrefix); // prepend prefix byte
 		if (this.compressed) bytes.push(0x01); // append 0x01 byte for compressed format
 		var checksum = Crypto.SHA256(Crypto.SHA256(bytes, { asBytes: true }), { asBytes: true });
 		bytes = bytes.concat(checksum.slice(0, 4));
@@ -225,20 +226,17 @@ Bitcoin.ECKey = (function () {
 		return /^[A-Fa-f0-9]{64}$/.test(key);
 	};
 
-	// 51 characters base58, always starts with a '6'
+	// 51 characters base58, always starts with a '9' and is
+	// followed by a 'U', 'V' or 'W'
 	ECKey.isWalletImportFormat = function (key) {
 		key = key.toString();
-		return (ECKey.privateKeyPrefix == 0xfd) ?
-							(/^9[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{50}$/.test(key)) :
-							(/^6[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{50}$/.test(key));
+		return (/^9[UVW][123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{49}$/.test(key));
 	};
 
 	// 52 characters base58
 	ECKey.isCompressedWalletImportFormat = function (key) {
 		key = key.toString();
-		return (ECKey.privateKeyPrefix == 0xfd) ?
-							(/^e[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{51}$/.test(key)) :
-							(/^c[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{51}$/.test(key));
+		return (/^e[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{51}$/.test(key));
 	};
 
 	// 44 characters

@@ -5031,6 +5031,7 @@ Bitcoin.ECKey = (function () {
 			var bytes = null;
 			if (ECKey.isWalletImportFormat(input)) {
 				bytes = ECKey.decodeWalletImportFormat(input);
+				this.compressed = false;
 			} else if (ECKey.isCompressedWalletImportFormat(input)) {
 				bytes = ECKey.decodeCompressedWalletImportFormat(input);
 				this.compressed = true;
@@ -5142,7 +5143,7 @@ Bitcoin.ECKey = (function () {
 	// Sipa Private Key Wallet Import Format 
 	ECKey.prototype.getBitcoinWalletImportFormat = function () {
 		var bytes = this.getBitcoinPrivateKeyByteArray();
-		bytes.unshift(ECKey.privateKeyPrefix); // prepend 0x80 byte
+		bytes.unshift(ECKey.privateKeyPrefix); // prepend prefix byte
 		if (this.compressed) bytes.push(0x01); // append 0x01 byte for compressed format
 		var checksum = Crypto.SHA256(Crypto.SHA256(bytes, { asBytes: true }), { asBytes: true });
 		bytes = bytes.concat(checksum.slice(0, 4));
@@ -5237,20 +5238,17 @@ Bitcoin.ECKey = (function () {
 		return /^[A-Fa-f0-9]{64}$/.test(key);
 	};
 
-	// 51 characters base58, always starts with a '6'
+	// 51 characters base58, always starts with a '9' and is
+	// followed by a 'U', 'V' or 'W'
 	ECKey.isWalletImportFormat = function (key) {
 		key = key.toString();
-		return (ECKey.privateKeyPrefix == 0xfd) ?
-							(/^9[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{50}$/.test(key)) :
-							(/^6[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{50}$/.test(key));
+		return (/^9[UVW][123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{49}$/.test(key));
 	};
 
 	// 52 characters base58
 	ECKey.isCompressedWalletImportFormat = function (key) {
 		key = key.toString();
-		return (ECKey.privateKeyPrefix == 0xfd) ?
-							(/^e[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{51}$/.test(key)) :
-							(/^c[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{51}$/.test(key));
+		return (/^e[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{51}$/.test(key));
 	};
 
 	// 44 characters
@@ -5903,7 +5901,8 @@ body { font-family: Arial; }
 				<div id="keyarea" class="keyarea">
 					<div class="public">
 						<div class="pubaddress">
-							<span class="label" id="singlelabelbitcoinaddress">StartCOIN Address</span>
+							<span class="label" id="singlelabelbitcoinaddress"><b>StartCOIN Address</b></span>
+						    <br />
 						</div>
 						<div id="qrcode_public" class="qrcode_public"></div>
 						<div class="pubaddress">
@@ -5913,7 +5912,8 @@ body { font-family: Arial; }
 					</div>
 					<div class="private">
 						<div class="privwif">
-							<span class="label" id="singlelabelprivatekey">Private Key (Wallet Import Format)</span>
+							<span class="label" id="singlelabelprivatekey"><b>Private Key (Wallet Import Format)</b></span>
+							<br />
 						</div>
 						<div id="qrcode_private" class="qrcode_private"></div>
 						<div class="privwif">
@@ -8001,24 +8001,24 @@ ninja.wallets.detailwallet = {
 				var key1 = "0278982F40FA0C0B7A55717583AFC99A4EDFD301A2729DC59B0B8EB9E18692BCB5";
 				var key2 = "SQE6yipP5oW8RBaStWoB47xsRQ8pat";
 				var bytes = ninja.publicKey.getByteArrayFromMultiplying(key1, new Bitcoin.ECKey(key2));
-				if (bytes.toString() != "4,102,230,163,180,107,9,21,17,48,35,245,227,110,199,119,144,57,41,112,64,245,182,40,224,41,230,41,5,26,206,138,57,115,35,54,105,7,180,5,106,217,57,229,127,174,145,215,79,121,163,191,211,143,215,50,48,156,211,178,72,226,68,150,52") {
-					return false;
-				}
-				return true;
-			},
-			testGetByteArrayFromMultiplyingCompressedOutputsCompressed: function () {
-				var key1 = "0278982F40FA0C0B7A55717583AFC99A4EDFD301A2729DC59B0B8EB9E18692BCB5";
-				var key2 = "L1n4cgNZAo2KwdUc15zzstvo1dcxpBw26NkrLqfDZtU9AEbPkLWu";
-				var ecKey = new Bitcoin.ECKey(key2);
-				var bytes = ninja.publicKey.getByteArrayFromMultiplying(key1, ecKey);
 				if (bytes.toString() != "2,102,230,163,180,107,9,21,17,48,35,245,227,110,199,119,144,57,41,112,64,245,182,40,224,41,230,41,5,26,206,138,57") {
 					return false;
 				}
 				return true;
 			},
+			testGetByteArrayFromMultiplyingCompressedOutputsCompressed: function () {
+				var key1 = "02AB10FB7D81378E3605545A866C2DFE04F51BEDCF066795C59717C2D908F7F632";
+				var key2 = "eaBhjSD3c3wu1kzft1syqUHYq1SbwbNz5moEcGQxkHDBpx1L8LXC";
+				var ecKey = new Bitcoin.ECKey(key2);
+				var bytes = ninja.publicKey.getByteArrayFromMultiplying(key1, ecKey);
+				if (bytes.toString() != "3,169,175,99,215,96,183,127,75,158,208,56,112,233,254,186,62,45,46,160,192,37,51,38,122,6,230,168,254,222,93,218,79") {
+					return false;
+				}
+				return true;
+			},
 			testGetByteArrayFromMultiplyingShouldReturnNullWhenSameKey1: function () {
-				var key1 = "0478982F40FA0C0B7A55717583AFC99A4EDFD301A2729DC59B0B8EB9E18692BCB521F054FAD982AF4CC1933AFD1F1B563EA779A6AA6CCE36A30B947DD653E63E44";
-				var key2 = "5J8QhiQtAiozKwyk3GCycAscg1tNaYhNdiiLey8vaDK8Bzm4znb";
+				var key1 = "04064008BBDCAC0E6C7F802D8C817D42A847709D4CA020404AA1CB56C622103D629CF03F3F828B8463EA7F13A5E2B6E6EE5292E5C9059955EF28E22D83D4C3FCB3";
+				var key2 = "9WjmZ9UXtngdUnAiUVLs1LECZwd4hKLN9kQtvKDMoaEexNS6Mi8";
 				var bytes = ninja.publicKey.getByteArrayFromMultiplying(key1, new Bitcoin.ECKey(key2));
 				if (bytes != null) {
 					return false;
@@ -8026,8 +8026,8 @@ ninja.wallets.detailwallet = {
 				return true;
 			},
 			testGetByteArrayFromMultiplyingShouldReturnNullWhenSameKey2: function () {
-				var key1 = "0278982F40FA0C0B7A55717583AFC99A4EDFD301A2729DC59B0B8EB9E18692BCB5";
-				var key2 = "KxbhchnQquYQ2dfSxz7rrEaQTCukF4uCV57TkamyTbLzjFWcdi3S";
+				var key1 = "03AEE3A5F452101A375D791A894B3C69250B923D489393D782FBFA53766E3C1742";
+				var key2 = "eVLrteSLo8LMbB1YPZ7N8YsR6joF8c3sGybYrztbSSeYEDPGPPdR";
 				var bytes = ninja.publicKey.getByteArrayFromMultiplying(key1, new Bitcoin.ECKey(key2));
 				if (bytes != null) {
 					return false;
@@ -8109,19 +8109,20 @@ ninja.wallets.detailwallet = {
 				return true;
 			},
 			testWifToPubKeyHex: function () {
-				var key = "eX4y7ZG18arep7bvVnf9zC26EvPfv7ikDgJMyHYqsKKCipE9xq9P";
+				var key = "9UtyMpA7TTiC1Sx1utPo6ynMjuX8EXB4LzWMRGnNBmHKdbEirgZ";
+				console.log('TEST');
 				var btcKey = new Bitcoin.ECKey(key);
-				if (btcKey.getPubKeyHex() != "A0374C27934D43E736592EB85052FFED6D8E1C2829E4368044D101FD38714D4A"
+				if (btcKey.getPubKeyHex() != "0413B79E569F39E433601A0B4B321A4937C2D5082B043E42D2A34399800D3AE7EC7A4E380D453E29BDB7F308B3D5A5EE7583428BC51792EB5FCD7B1835EAB701C3"
 						|| btcKey.getPubPoint().compressed != false) {
 					return false;
 				}
 				return true;
 			},
 			testWifToPubKeyHexCompressed: function () {
-				var key = "9UtyMpA7TTiC1Sx1utPo6ynMjuX8EXB4LzWMRGnNBmHKdbEirgZ";
+				var key = "eYPzMYYysGXZXC5wDSMzufbBkDh8pSuPwcGJWDTzyc9fQhGLjkB3";
 				var btcKey = new Bitcoin.ECKey(key);
 				btcKey.setCompressed(true);
-				if (btcKey.getPubKeyHex() != "0313B79E569F39E433601A0B4B321A4937C2D5082B043E42D2A34399800D3AE7EC"
+				if (btcKey.getPubKeyHex() != "0324F6D4BB93E8EFC442B25BC32C1F991C04BEDABD017833FD7BEC93E7C88D9F65"
 						|| btcKey.getPubPoint().compressed != true) {
 					return false;
 				}
@@ -8139,6 +8140,23 @@ ninja.wallets.detailwallet = {
 				var key = "292665C3872418ADF1DA7FFA3A646F2F0602246DA6098A91D229C32150F2718B";
 				var btcKey = new Bitcoin.ECKey(key);
 				if (btcKey.getBitcoinHexFormat() != "292665C3872418ADF1DA7FFA3A646F2F0602246DA6098A91D229C32150F2718B") {
+					return false;
+				}
+				return true;
+			},
+			testWifRegEx: function() {
+				var key = "9VbhfUJMhMBRVvRC5XiNGXCHbAQnuiPHpPBuZFsgyhRxbGX1fBq";
+				return (/^9[UVW][123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{49}$/.test(key))
+			},
+			testCompressedWifRegEx: function() {
+				var key = "eYPzMYYysGXZXC5wDSMzufbBkDh8pSuPwcGJWDTzyc9fQhGLjkB3";
+				return (/^e[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{51}$/.test(key))
+			},
+			testWifToECKey: function () {
+				var key = "9VbhfUJMhMBRVvRC5XiNGXCHbAQnuiPHpPBuZFsgyhRxbGX1fBq";
+				var btcKey = new Bitcoin.ECKey(key);
+				if (btcKey.getBitcoinWalletImportFormat() != "9VbhfUJMhMBRVvRC5XiNGXCHbAQnuiPHpPBuZFsgyhRxbGX1fBq"
+						|| btcKey.getPubPoint().compressed != false) {
 					return false;
 				}
 				return true;
@@ -8161,10 +8179,10 @@ ninja.wallets.detailwallet = {
 				return true;
 			},
 			testBrainToECKey: function () {
-				var key = "bitaddress.org unit test";
+				var key = "startaddress.org unit test";
 				var bytes = Crypto.SHA256(key, { asBytes: true });
 				var btcKey = new Bitcoin.ECKey(bytes);
-				if (btcKey.getBitcoinWalletImportFormat() != "9V7TkhWsguMJBVcuMinsqFpR9Gs8qa2pzcZo9h7yq89bsm1q3nr") {
+				if (btcKey.getBitcoinWalletImportFormat() != "eXict8dR2mVEHyegEE2KEzxD5Zr4omsz31tscwPvCoQCrGHccfa7") {
 					return false;
 				}
 				return true;
@@ -8172,16 +8190,16 @@ ninja.wallets.detailwallet = {
 			testMini30CharsToECKey: function () {
 				var key = "SQE6yipP5oW8RBaStWoB47xsRQ8pat";
 				var btcKey = new Bitcoin.ECKey(key);
-				if (btcKey.getBitcoinWalletImportFormat() != "5JrBLQseeZdYw4jWEAHmNxGMr5fxh9NJU3fUwnv4khfKcg2rJVh") {
+				if (btcKey.getBitcoinWalletImportFormat() != "eWFt5rR141YWkK8d8ZLdPekg7wjWAVptSbd9Hcy3whg7McVkbLCD") {
 					return false;
 				}
 				return true;
 			},
 			testGetECKeyFromAdding: function () {
-				var key1 = "5J8QhiQtAiozKwyk3GCycAscg1tNaYhNdiiLey8vaDK8Bzm4znb";
+				var key1 = "9VbhfUJMhMBRVvRC5XiNGXCHbAQnuiPHpPBuZFsgyhRxbGX1fBq";
 				var key2 = "SQE6yipP5oW8RBaStWoB47xsRQ8pat";
 				var ecKey = ninja.privateKey.getECKeyFromAdding(key1, key2);
-				if (ecKey.getBitcoinWalletImportFormat() != "5KAJTSqSjpsZ11KyEE3qu5PrJVjR4ZCbNxK3Nb1F637oe41m1c2") {
+				if (ecKey.getBitcoinWalletImportFormat() != "eZnWupk27CpjM3Z47P3Gr86GNoSUbHtMUxxJh4xqAtTCUnuynJzz") {
 					return false;
 				}
 				return true;
@@ -8223,10 +8241,10 @@ ninja.wallets.detailwallet = {
 				return true;
 			},
 			testGetECKeyFromMultiplying: function () {
-				var key1 = "5J8QhiQtAiozKwyk3GCycAscg1tNaYhNdiiLey8vaDK8Bzm4znb";
+				var key1 = "9UtyMpA7TTiC1Sx1utPo6ynMjuX8EXB4LzWMRGnNBmHKdbEirgZ";
 				var key2 = "SQE6yipP5oW8RBaStWoB47xsRQ8pat";
 				var ecKey = ninja.privateKey.getECKeyFromMultiplying(key1, key2);
-				if (ecKey.getBitcoinWalletImportFormat() != "5KetpZ5mCGagCeJnMmvo18n4iVrtPSqrpnW5RP92Gv2BQy7GPCk") {
+				if (ecKey.getBitcoinWalletImportFormat() != "eTgGBoFVqCZWh9pr5JeAPx2X9zCMSntgNU2tsm9nyHD4rqCK89vp") {
 					return false;
 				}
 				return true;
@@ -8299,18 +8317,11 @@ ninja.wallets.detailwallet = {
 				return true;
 			},
 			// old bugs
-			testBugWithLeadingZeroBytePublicKey: function () {
-				var key = "5Je7CkWTzgdo1RpwjYhwnVKxQXt8EPRq17WZFtWcq5umQdsDtTP";
-				var btcKey = new Bitcoin.ECKey(key);
-				if (btcKey.getBitcoinAddress() != "1M6dsMZUjFxjdwsyVk8nJytWcfr9tfUa9E") {
-					return false;
-				}
-				return true;
-			},
 			testBugWithLeadingZeroBytePrivateKey: function () {
 				var key = "0004d30da67214fa65a41a6493576944c7ea86713b14db437446c7a8df8e13da";
 				var btcKey = new Bitcoin.ECKey(key);
-				if (btcKey.getBitcoinAddress() != "1NAjZjF81YGfiJ3rTKc7jf1nmZ26KN7Gkn") {
+				console.log(btcKey.getBitcoinAddress());
+				if (btcKey.getBitcoinAddress() != "sKyCh49iZd3kLCzavsQJQtGjLQDR5NtEAu") {
 					return false;
 				}
 				return true;
