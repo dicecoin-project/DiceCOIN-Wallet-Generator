@@ -1,7 +1,7 @@
 {
-  "name": "startaddress.org",
+  "name": "DiceCOIN-Wallet-Generator",
   "version": "2.8.1",
-  "description": "Open Source JavaScript Client-Side StartCOIN Wallet Generator",
+  "description": "Open Source JavaScript Client-Side DiceCOIN Wallet Generator",
   "main": "Gruntfile.js",
   "dependencies": {
     "grunt": "~0.4.4",
@@ -14,16 +14,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/startcoin-project/startaddress.org.git"
+    "url": "git://github.com/dicecoin-project/DiceCOIN-Wallet-Generator.git"
   },
   "keywords": [
-    "StartCOIN address wallet generator"
+    "DiceCOIN address wallet generator"
   ],
-  "author": "StartJOIN",
+  "author": "DiceCOIN Team",
   "license": "MIT",
   "readmeFilename": "README",
   "gitHead": "95d6b3f398cb8a28c03103a7e4c78bb21d0f23a0",
   "bugs": {
-    "url": "https://github.com/startcoin-project/startaddress.org/issues"
+    "url": "https://github.com/dicecoin-project/DiceCOIN-Wallet-Generator/issues"
   }
 }
